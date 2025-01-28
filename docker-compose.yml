@@ -1,12 +1,32 @@
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/vnt87/exif-photo-blog:latest
     ports:
-      - "3000:3000"
+      - "7780:3000"
     env_file:
       - .env
     restart: unless-stopped
+    volumes:
+      - ./uploads:/app/uploads  # Local storage for uploaded photos
     environment:
       - NODE_ENV=production
+      - NEXT_PUBLIC_STORAGE_PREFERENCE=local
+      - POSTGRES_URL=postgresql://exif:exif@db:5432/exif
+      - DISABLE_POSTGRES_SSL=1  # Disable SSL for local Postgres
+    depends_on:
+      - db
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=exif
+      - POSTGRES_PASSWORD=exif
+      - POSTGRES_DB=exif
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"  # Expose port for local development (optional)
+    restart: unless-stopped
+
+volumes:
+  postgres-data:

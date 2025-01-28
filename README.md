@@ -56,6 +56,54 @@ Develop locally
 4. Run `vercel link` to connect the CLI to your project
 5. Run `vercel dev` to start dev server with Vercel-managed environment variables
 
+Docker Installation
+-
+The Docker setup includes:
+- Application running on port 7780
+- Local PostgreSQL database
+- Local file storage for uploaded photos
+
+### 1. Using pre-built image
+
+1. Create required directories:
+   ```bash
+   mkdir uploads
+   ```
+
+2. Create a `.env` file with minimal configuration:
+   ```env
+   AUTH_SECRET=your_generated_secret  # Generate with: openssl rand -base64 32
+   ADMIN_EMAIL=your_admin_email
+   ADMIN_PASSWORD=your_admin_password
+   NEXT_PUBLIC_SITE_DOMAIN=localhost:7780
+   ```
+
+3. Run with Docker Compose:
+   ```bash
+   docker compose pull
+   docker compose up -d
+   ```
+
+4. Access the application at http://localhost:7780
+
+### 2. Building locally
+
+1. Clone the repository
+2. Create directories and `.env` file as described above
+3. Build and run:
+   ```bash
+   docker compose build
+   docker compose up -d
+   ```
+
+### Notes
+- Uploaded photos are stored in the `uploads` directory
+- Database data is persisted in a Docker volume named `postgres-data`
+- The PostgreSQL database is also accessible on localhost:5432 with:
+  - Username: exif
+  - Password: exif
+  - Database: exif
+
 Further customization
 -
 ### Experimental AI text generation
